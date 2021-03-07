@@ -161,3 +161,32 @@ pub fn print_someting(){
     writer.write_string("world!!!");
     write!(writer," this is {} and {}",43,1.0/3.0).unwrap();
 }
+
+#[cfg(test)]
+use crate::{serial_print,serial_println};
+
+#[test_case]
+fn   test_println_simple(){
+    serial_print!("testing start");
+    println!("test_println_simple output");
+    serial_print!("[ok]");
+}
+#[test_case]
+fn   test_println_many(){
+    serial_print!("testing start");
+    for _ in 0..20 {
+        println!("test_println_many output");        
+    }
+    serial_print!("[ok]");
+}
+#[test_case]
+fn test_println_output(){
+    serial_print!("test_println_output start");
+    let s ="this is test of output";
+    println!("{}",s);
+    for (i,c) in s.chars().enumerate() {
+        let screen_char = WRITER.lock().buffer.chars[BUFFER_HEIGHT-2][i].read();
+        assert_eq!(char::from(screen_char.ascii_character),c);
+    } 
+     serial_print!("[ok]");
+}

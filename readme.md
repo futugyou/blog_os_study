@@ -12,3 +12,8 @@ cargo install bootimage --version "^0.7.7"
 rustup component add llvm-tools-preview
 cargo bootimage
 qemu-system-x86_64 -drive format=raw,file=\target\x86_64-blog_os\debug\bootimage-blog_os_study.bin
+
+
+// qemu: could not load PC BIOS 'bios-256k.bin'
+qemu-system-x86_64 -drive format=raw,file=target\x86_64-blog_os\debug\deps\bootimage-blog_os_study-4150e5fd9f416d92.bin -device isa-debug-exit,iobase=0xf4,iosize=0x04 -serial stdio -L E:\qemu
+qemu-system-x86_64 -drive format=raw,file=target\x86_64-blog_os\debug\bootimage-blog_os_study.bin -L E:\qemu
