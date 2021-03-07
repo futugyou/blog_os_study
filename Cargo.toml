@@ -28,5 +28,6 @@ features = ["spin_no_std"]
 
 
 [package.metadata.bootimage]
+run-args = ["-L","E:\\qemu"]
 test-args = ["-device", "isa-debug-exit,iobase=0xf4,iosize=0x04","-serial","stdio","-display","none","-L","E:\\qemu"]
 test-success-exit-code = 33
