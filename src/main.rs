@@ -11,7 +11,7 @@ use core::panic::PanicInfo;
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
     println!("{}", info);
-    loop {}
+    blog_os_study::hlt_loop()
 }
 
 #[cfg(test)]
@@ -60,8 +60,10 @@ pub extern "C" fn _start() -> ! {
 
     println!("it did not crash");
     //panic!("this si panic!");
-    loop {
-        use blog_os_study::print;
-        print!("-");
-    }
+    // loop {
+    //     use blog_os_study::print;
+    //     for _ in 0..10000 {}
+    //     print!("-");
+    // }
+    blog_os_study::hlt_loop()
 }
