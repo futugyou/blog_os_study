@@ -39,7 +39,20 @@ pub extern "C" fn _start() -> ! {
     println!("hahahaha {} 233", "OJBK!");
 
     blog_os_study::init();
-    x86_64::instructions::interrupts::int3();
+
+    //double fault
+    // unsafe {
+    //     *(0xdeadbeef as *mut u64) = 42;
+    // }
+
+    // break interrupt
+    //x86_64::instructions::interrupts::int3();
+
+    // stack_overflow
+    fn stack_overflow() {
+        stack_overflow();
+    }
+    stack_overflow();
 
     #[cfg(test)]
     test_main();
