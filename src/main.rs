@@ -49,6 +49,7 @@ pub extern "C" fn _start() -> ! {
     //x86_64::instructions::interrupts::int3();
 
     // stack_overflow
+    #[allow(unconditional_recursion)]
     fn stack_overflow() {
         stack_overflow();
     }
