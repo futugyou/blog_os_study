@@ -20,6 +20,7 @@ lazy_static! {
                 .set_stack_index(gdt::DOUBLE_FAULT_IST_INDEX);
         }
         idt[InterruptIndex::Timer.as_usize()].set_handler_fn(time_fault_handler);
+        idt[InterruptIndex::Keyboard.as_usize()].set_handler_fn(keyboard_fault_handler);
         idt
     };
 }
@@ -47,10 +48,19 @@ extern "x86-interrupt" fn time_fault_handler(_stack_frame: &mut InterruptStackFr
     }
 }
 
+extern "x86-interrupt" fn keyboard_fault_handler(_stack_frame: &mut InterruptStackFrame) {
+    print!("k");
+    unsafe {
+        PICS.lock()
+            .notify_end_of_interrupt(InterruptIndex::Keyboard.as_u8());
+    }
+}
+
 #[derive(Debug, Clone, Copy)]
 #[repr(u8)]
 pub enum InterruptIndex {
     Timer = PIC_1_OFFSET,
+    Keyboard, // this is 33
 }
 
 impl InterruptIndex {
