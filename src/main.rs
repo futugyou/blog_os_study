@@ -60,5 +60,8 @@ pub extern "C" fn _start() -> ! {
 
     println!("it did not crash");
     //panic!("this si panic!");
-    loop {}
+    loop {
+        use blog_os_study::print;
+        print!("-");
+    }
 }
