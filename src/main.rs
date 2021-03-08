@@ -37,8 +37,14 @@ pub extern "C" fn _start() -> ! {
     // write!(vga_buffer::WRITER.lock(),", this si {} and {}",42,10./3.0).unwrap();
     println!();
     println!("hahahaha {} 233", "OJBK!");
+
+    blog_os_study::init();
+    x86_64::instructions::interrupts::int3();
+
     #[cfg(test)]
     test_main();
+
+    println!("it did not crash");
     //panic!("this si panic!");
     loop {}
 }
