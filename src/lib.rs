@@ -7,10 +7,22 @@
 
 pub mod gdt;
 pub mod interrupts;
+pub mod memory;
 pub mod serial;
 pub mod vga_buffer;
-
+#[cfg(test)]
+use bootloader::{entry_point, BootInfo};
 use core::panic::PanicInfo;
+
+#[cfg(test)]
+entry_point!(test_kernel_main);
+
+#[cfg(test)]
+fn test_kernel_main(_boot_info: &'staitc BootInfo) -> ! {
+    init();
+    test_main();
+    hlt_loop()
+}
 
 pub fn init() {
     gdt::init();
@@ -40,13 +52,13 @@ pub fn test_panic_handler(info: &PanicInfo) -> ! {
     hlt_loop()
 }
 
-#[cfg(test)]
-#[no_mangle]
-pub extern "C" fn _start() -> ! {
-    init();
-    test_main();
-    hlt_loop()
-}
+// #[cfg(test)]
+// #[no_mangle]
+// pub extern "C" fn _start() -> ! {
+//     init();
+//     test_main();
+//     hlt_loop()
+// }
 
 #[cfg(test)]
 #[panic_handler]
