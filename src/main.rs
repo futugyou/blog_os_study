@@ -40,23 +40,37 @@ pub extern "C" fn _start() -> ! {
 
     blog_os_study::init();
 
-    //double fault
+    use x86_64::registers::control::Cr3;
+    let (level_4_page_table, _) = Cr3::read();
+    println!(
+        "level 4 page table at; {:?}",
+        level_4_page_table.start_address()
+    );
+
+    // double fault
     // unsafe {
     //     *(0xdeadbeef as *mut u64) = 42;
     // }
 
     // break interrupt
-    //x86_64::instructions::interrupts::int3();
+    // x86_64::instructions::interrupts::int3();
 
     // stack_overflow
     // #[allow(unconditional_recursion)]
     // fn stack_overflow() {
     //     stack_overflow();
     // }
-    //stack_overflow();
+    // stack_overflow();
 
-    //page fault
-    let ptr = 0xdeadbeef as *mut u32;
+    // page fault
+    // let ptr = 0xdeadbeef as *mut u32;
+    // Note : the actual address might be different for you.
+    // use the address that your page fault handler reports
+    let ptr = 0x203bd5 as *mut u32;
+    unsafe {
+        let _x = *ptr;
+    }
+    println!("read ok");
     unsafe {
         *ptr = 42;
     }
@@ -65,7 +79,7 @@ pub extern "C" fn _start() -> ! {
     test_main();
 
     println!("it did not crash");
-    //panic!("this si panic!");
+    // panic!("this si panic!");
     // loop {
     //     use blog_os_study::print;
     //     for _ in 0..10000 {}
