@@ -21,7 +21,7 @@ harness = false
 # panic = "abort"
 
 [dependencies]
-bootloader = {version="0.9",features=["map_physical_memory"]}
+bootloader = { version = "0.9", features = ["map_physical_memory"]}
 volatile = "0.3"
 spin = "0.7"
 x86_64 = "0.13"
