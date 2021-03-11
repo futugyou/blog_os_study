@@ -6,8 +6,11 @@ use x86_64::{
     },
     VirtAddr,
 };
+
 pub mod bump;
+pub mod fixed_size_block;
 pub mod linked_list;
+
 pub const HEAP_START: usize = 0x_4444_4444_0000;
 pub const HEAP_SIZE: usize = 100 * 1024; // 100 KiB
 
@@ -58,9 +61,13 @@ unsafe impl GlobalAlloc for Dummy {
 // #[global_allocator]
 // static ALLOCATOR: Locked<BumpAllocator> = Locked::new(BumpAllocator::new());
 
-use linked_list::LinkedListAllocator;
+// use linked_list::LinkedListAllocator;
+// #[global_allocator]
+// static ALLOCATOR: Locked<LinkedListAllocator> = Locked::new(LinkedListAllocator::new());
+
+use fixed_size_block::FixedSizeBlockAllocator;
 #[global_allocator]
-static ALLOCATOR: Locked<LinkedListAllocator> = Locked::new(LinkedListAllocator::new());
+static ALLOCATOR: Locked<FixedSizeBlockAllocator> = Locked::new(FixedSizeBlockAllocator::new());
 
 pub struct Locked<A> {
     inner: spin::Mutex<A>,
