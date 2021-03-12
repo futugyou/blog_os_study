@@ -36,6 +36,14 @@ linked_list_allocator = "0.8"
 version = "1"
 features = ["spin_no_std"]
 
+[dependencies.crossbeam-queue]
+version = "0.3"
+default-features = false
+features = ["alloc"]
+
+[dependencies.conquer-once]
+version = "0.3"
+default-features = false
 
 [package.metadata.bootimage]
 run-args = ["-L","E:\\qemu"]

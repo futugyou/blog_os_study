@@ -21,7 +21,8 @@ lazy_static! {
                 .set_stack_index(gdt::DOUBLE_FAULT_IST_INDEX);
         }
         idt[InterruptIndex::Timer.as_usize()].set_handler_fn(time_fault_handler);
-        idt[InterruptIndex::Keyboard.as_usize()].set_handler_fn(keyboard_fault_handler);
+        // idt[InterruptIndex::Keyboard.as_usize()].set_handler_fn(keyboard_fault_handler);
+        idt[InterruptIndex::Keyboard.as_usize()].set_handler_fn(keyboard_interrupt_handler);
         idt.page_fault.set_handler_fn(page_fault_handler);
         idt
     };
@@ -62,6 +63,7 @@ extern "x86-interrupt" fn time_fault_handler(_stack_frame: &mut InterruptStackFr
     }
 }
 
+#[allow(dead_code)]
 extern "x86-interrupt" fn keyboard_fault_handler(_stack_frame: &mut InterruptStackFrame) {
     use pc_keyboard::{layouts, DecodedKey, HandleControl, Keyboard, ScancodeSet1};
     use spin::Mutex;
@@ -85,6 +87,19 @@ extern "x86-interrupt" fn keyboard_fault_handler(_stack_frame: &mut InterruptSta
             }
         }
     }
+
+    unsafe {
+        PICS.lock()
+            .notify_end_of_interrupt(InterruptIndex::Keyboard.as_u8());
+    }
+}
+
+extern "x86-interrupt" fn keyboard_interrupt_handler(_stack_frame: &mut InterruptStackFrame) {
+    use x86_64::instructions::port::Port;
+
+    let mut port = Port::new(0x60);
+    let scancode: u8 = unsafe { port.read() };
+    crate::task::keyboard::add_scancode(scancode); // new
 
     unsafe {
         PICS.lock()
